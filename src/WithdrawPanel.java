@@ -90,17 +90,29 @@ public class WithdrawPanel extends JPanel implements ActionListener {
             internalCardLayout.show(internalPanel, "DefaultHome");
         }
 
-        if (e.getSource() == withdrawButton) {
+         if (e.getSource() == withdrawButton) {
             String password = new String(passwordField.getPassword()).trim();
             if (password.equals(this.user.getBankAccount().getPassword())) {
+                String amountText = amountField.getText().trim();
                 try {
-                    double amount = Double.parseDouble(amountField.getText().trim());
+                    double amount = Double.parseDouble(amountText);
+
+                    if (amount <= 0) {
+                        JOptionPane.showMessageDialog(this, "Amount must be greater than zero.", "Invalid Amount", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    //  Only withdraw if parsing succeeded
                     this.user.getBankAccount().withdraw(amount);
+
                     JOptionPane.showMessageDialog(this, "Withdraw successful", "Success", JOptionPane.INFORMATION_MESSAGE);
                     internalCardLayout.show(internalPanel, "DefaultHome");
+
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Withdraw amount cannot be Alphabet or character!", "Invalid withdraw amount", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Incorrect password!", "Authentication Failed", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
