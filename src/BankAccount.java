@@ -129,49 +129,52 @@ public class BankAccount {
     //This is a functionn to perform the transfer method
 
 
-    public void transfer(String receiverAccountNumber, String receiverName, double amount, String note, ArrayList<User> allUsers) {
-        if (amount <= 0) {
-            JOptionPane.showMessageDialog(null,"Transfer amount cannot be negative ","INVALID TRANSFER AMOUNT",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (this.balance < amount) {
-            JOptionPane.showMessageDialog(null,"INSUFFICIENT BALANCE ","BALANCE ERROR",JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-        // Find the recipient
-        BankAccount receiverAccount = null;
-        for (User user : allUsers) {
-            if (user.getBankAccount().getAccountNumber().equals(receiverAccountNumber)
-                    && user.getName().equalsIgnoreCase(receiverName)) {
-                receiverAccount = user.getBankAccount();
-                break;
-            }
-        }
-
-        if (receiverAccount == null) {
-            JOptionPane.showMessageDialog(null,"Receiver not found ","INVALID RECEIVER",JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-        // Perform the transfer
-        this.balance -= amount;
-        receiverAccount.balance += amount;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String tempDate = (LocalDateTime.now()).format(formatter);
-        transactionHistory.add(new Transaction(tempDate,"Transfer",amount,balance));
-        expenseManagerPanel.addExpense(amount);
-        // Optional: Log the transfer
-        //System.out.println("Transferred ₹" + amount + " to " + receiverName + " [" + receiverAccountNumber + "]");
-        if (!note.isEmpty()) {
-            JOptionPane.showMessageDialog(null,"Note sent successfully ","SUCCESS",JOptionPane.INFORMATION_MESSAGE);
-
-        }
-
+ public void transfer(String receiverAccountNumber, String receiverName, double amount, String note, ArrayList<User> allUsers) {
+    if (amount <= 0) {
+        JOptionPane.showMessageDialog(null, "Transfer amount cannot be negative", "INVALID TRANSFER AMOUNT", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+
+    if (this.balance < amount) {
+        JOptionPane.showMessageDialog(null, "INSUFFICIENT BALANCE", "BALANCE ERROR", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Find the recipient
+    BankAccount receiverAccount = null;
+    for (User user : allUsers) {
+        if (user.getBankAccount().getAccountNumber().equals(receiverAccountNumber)
+                && user.getName().equalsIgnoreCase(receiverName)) {
+            receiverAccount = user.getBankAccount();
+            break;
+        }
+    }
+
+    if (receiverAccount == null) {
+        // ❗ Correctly return early if receiver is invalid
+        JOptionPane.showMessageDialog(null, "Receiver not found", "INVALID RECEIVER", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // ✅ All checks passed: Proceed with transfer
+    this.balance -= amount;
+    receiverAccount.balance += amount;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String tempDate = (LocalDateTime.now()).format(formatter);
+
+    transactionHistory.add(new Transaction(tempDate, "Transfer", amount, balance));
+    expenseManagerPanel.addExpense(amount);
+
+    // ✅ Only show success message if everything above succeeded
+    String message = "Transfer successful to " + receiverName + " [" + receiverAccountNumber + "].";
+    if (!note.trim().isEmpty()) {
+        message += "\nNote sent successfully.";
+    }
+
+    JOptionPane.showMessageDialog(null, message, "Transfer Complete", JOptionPane.INFORMATION_MESSAGE);
+}
+
 
 
     public ArrayList<Transaction> showTransactionHistory() {
