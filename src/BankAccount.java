@@ -151,12 +151,11 @@ public class BankAccount {
     }
 
     if (receiverAccount == null) {
-        // ❗ Correctly return early if receiver is invalid
         JOptionPane.showMessageDialog(null, "Receiver not found", "INVALID RECEIVER", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    // ✅ All checks passed: Proceed with transfer
+    //  All checks passed: Proceed with transfer
     this.balance -= amount;
     receiverAccount.balance += amount;
 
@@ -166,7 +165,7 @@ public class BankAccount {
     transactionHistory.add(new Transaction(tempDate, "Transfer", amount, balance));
     expenseManagerPanel.addExpense(amount);
 
-    // ✅ Only show success message if everything above succeeded
+    //  Only show success message if everything above succeeded
     String message = "Transfer successful to " + receiverName + " [" + receiverAccountNumber + "].";
     if (!note.trim().isEmpty()) {
         message += "\nNote sent successfully.";
