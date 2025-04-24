@@ -39,4 +39,4 @@ The project is divided into several key components:
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/karthik768990/BANKING-SYSTEM-SIMULATOR.git
-2.After the cloning has done,compile all the files in src folder using    **javac *.java** and then run the Main using **java Main**
+2.After the cloning has done,compile all the files in src folder using    javac *.java and then run the Main using **java Main**
